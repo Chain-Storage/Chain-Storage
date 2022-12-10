@@ -27,6 +27,8 @@ const port = 9001;
 
 if (os.type() === "Windows_NT") {
   hostUrl = `ftp://${results["VirtualBox Host-Only Network"][0]}:` + port;
+} else if (os.type() === "Linux") {
+  hostUrl = `ftp://${results.wlp8s0[0]}:` + port;
 } else {
   console.error("This ftp server only support Windows");
 }
@@ -39,7 +41,7 @@ const ftpServer = new FtpSrv({
 ftpServer.on("login", ({ connection, username, password }, resolve, reject) => {
   if (username === "yurikaza" && password === "anonymous") {
     return resolve({
-      root: "C:/Users/yusuf/Desktop/Chain-Storage/backend/ftp-server/src/test",
+      root: `${__dirname}/files`,
     });
   }
   return reject(new errors.GeneralError("Invalid username or password", 401));
