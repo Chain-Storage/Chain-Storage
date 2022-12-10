@@ -158,6 +158,30 @@ app.post("/getFiles/", async (req: Request, res: Response) => {
   });
 });
 
+app.get("/downloadFile/", async (req: Request, res: Response) => {
+  const client = new ftp.Client();
+  client.ftp.verbose = true;
+  try {
+    await client.access({
+      host: `${process.env.HOST}`,
+      port: Number(process.env.PORT),
+      user: "yurikaza",
+      password: `${process.env.PASSWORD}`,
+      secure: false,
+    });
+    //await client.ensureDir(fileData.path);
+    await client.downloadTo(req.body.fileName, req.body.fileName);
+  } catch (err) {
+    console.log(err);
+  }
+  client.close();
+
+  res.status(201).json({
+    status: "success",
+    data: "File Downloaded",
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
