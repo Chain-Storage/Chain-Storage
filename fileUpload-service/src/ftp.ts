@@ -158,7 +158,7 @@ app.post("/getFiles/", async (req: Request, res: Response) => {
   });
 });
 
-app.get("/downloadFile/", async (req: Request, res: Response) => {
+app.post("/downloadFile/", async (req: Request, res: Response) => {
   const client = new ftp.Client();
   client.ftp.verbose = true;
   try {
@@ -170,7 +170,12 @@ app.get("/downloadFile/", async (req: Request, res: Response) => {
       secure: false,
     });
     //await client.ensureDir(fileData.path);
-    await client.downloadTo(req.body.fileName, req.body.fileName);
+    console.log(await client.list(req.body.fileName));
+
+    await client.downloadTo(
+      "../client/src/" + req.body.fileName,
+      req.body.fileName
+    );
   } catch (err) {
     console.log(err);
   }
